@@ -335,25 +335,28 @@ class Parameters_Window:
                 )
 
         self.replicatemperatures_entry = Pmw.EntryField(
-            self.frame2_5,
-            labelpos="w",
-            label_text="REPLICA TEMPERATURES",
-            label_wraplength=108,
-            entry_bg="white",
-            entry_width=10)
+                                            self.frame2_5,
+                                            labelpos="w",
+                                            label_text="REPLICA TEMPERATURES",
+                                            label_wraplength=108,
+                                            entry_bg="white",
+                                            entry_width=10
+                                            )
         self.replicatemperatures_entry.grid(
             row=2, column=0, sticky="e", padx=2)
 
         self.reductmet_menu = Pmw.OptionMenu(
-            self.frame2_5,
-            labelpos="w",
-            label_text="REDUCTMETHOD",
-            initialitem="roulette",
-            items=[
-                "roulette",
-                "cutoff",
-                "tournament"],
-            menubutton_width=10)
+                                self.frame2_5,
+                                labelpos="w",
+                                label_text="REDUCTMETHOD",
+                                initialitem="roulette",
+                                items=[
+                                    "roulette",
+                                    "cutoff",
+                                    "tournament"
+                                    ],
+                                menubutton_width=10
+                                )
         self.reductmet_menu.grid(row=3, column=0, sticky="e", padx=2)
 
         # Scoring function parameters
@@ -361,7 +364,7 @@ class Parameters_Window:
         self.frame5 = Tkinter.LabelFrame(pw, text="Scoring function weights")
         self.frame5.grid(row=2, column=0, sticky="nsew")
 
-        self.bzz1 = Tkinter.Frame(self.frame5)
+        self.bzz1 = Tkinter.Frame(self.frame5)  # what
         self.bzz1.pack(side="right")
         bzz1 = Tkinter.Label(self.bzz1, text="")
         bzz1.pack()
@@ -370,149 +373,145 @@ class Parameters_Window:
         self.frame4.pack(side="right")
 
         self.outbox_entry1 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="OUTBOX",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                self.frame4,
+                                labelpos="w",
+                                label_text="OUTBOX",
+                                entry_bg="white",
+                                value="1",
+                                entry_width=3,
+                                validate={"validator": "real"}
+                                )
         self.outbox_entry1.grid(row=0, column=0, sticky="e")
+
         self.outbox_entry2 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="-",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                self.frame4,
+                                labelpos="w",
+                                label_text="-",
+                                entry_bg="white",
+                                value="1",
+                                entry_width=3,
+                                validate={"validator": "real"}
+                                )
         self.outbox_entry2.grid(row=0, column=1, sticky="e")
 
         self.map_freespace_entry1 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="MAP_FREESPACE",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                        self.frame4,
+                                        labelpos="w",
+                                        label_text="MAP_FREESPACE",
+                                        entry_bg="white",
+                                        value="1",
+                                        entry_width=3,
+                                        validate={"validator": "real"}
+                                        )
         self.map_freespace_entry1.grid(row=1, column=0, sticky="e")
+
         self.map_freespace_entry2 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="-",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                        self.frame4,
+                                        labelpos="w",
+                                        label_text="-",
+                                        entry_bg="white",
+                                        value="1",
+                                        entry_width=3,
+                                        validate={"validator": "real"}
+                                        )
         self.map_freespace_entry2.grid(row=1, column=1, sticky="e")
 
-        # self.clashes_entry1=Pmw.EntryField(self.frame4,labelpos="w",label_text="CLASHES",entry_bg="white",value="1",entry_width=3,validate={"validator":"real"})
-        # self.clashes_entry1.grid(row=2,column=0,sticky="e")
-        # self.clashes_entry2=Pmw.EntryField(self.frame4,labelpos="w",label_text="-",entry_bg="white",value="1",entry_width=3,validate={"validator":"real"})
-        # self.clashes_entry2.grid(row=2,column=1,sticky="e")
-
-        # self.clashes_allatoms_entry1=Pmw.EntryField(self.frame4,labelpos="w",label_text="CLASHES_ALLATOMS",entry_bg="white",value="1",entry_width=3,validate={"validator":"real"})
-        # self.clashes_allatoms_entry1.grid(row=3,column=0,sticky="e")
-        # self.clashes_allatoms_entry2=Pmw.EntryField(self.frame4,labelpos="w",label_text="-",entry_bg="white",value="1",entry_width=3,validate={"validator":"real"})
-        # self.clashes_allatoms_entry2.grid(row=3,column=1,sticky="e")
-
         self.clashes_menu = Pmw.OptionMenu(
-            self.frame4,
-            labelpos="w",
-            label_text="CLASHES",
-            initialitem="CLASHES_ALLATOMS",
-            items=[
-                "CLASHES_ALLATOMS",
-                "CLASHES"],
-            menubutton_width=8)
+                                self.frame4,
+                                labelpos="w",
+                                label_text="CLASHES",
+                                initialitem="CLASHES_ALLATOMS",
+                                items=["CLASHES_ALLATOMS", "CLASHES"],
+                                menubutton_width=8
+                                )
         self.clashes_menu.grid(row=2, column=0, sticky="e", padx=2)
+
         self.clashes_entry1 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                self.frame4,
+                                labelpos="w",
+                                label_text="",
+                                entry_bg="white",
+                                value="1",
+                                entry_width=3,
+                                validate={"validator": "real"}
+                                    )
         self.clashes_entry1.grid(row=2, column=1, sticky="e")
+
         self.clashes_entry2 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="-",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                self.frame4,
+                                labelpos="w",
+                                label_text="-",
+                                entry_bg="white",
+                                value="1",
+                                entry_width=3,
+                                validate={"validator": "real"}
+                                )
         self.clashes_entry2.grid(row=2, column=2, sticky="e")
 
         self.restraints_entry1 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="RESTRAINTS",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                    self.frame4,
+                                    labelpos="w",
+                                    label_text="RESTRAINTS",
+                                    entry_bg="white",
+                                    value="1",
+                                    entry_width=3,
+                                    validate={"validator": "real"}
+                                    )
         self.restraints_entry1.grid(row=4, column=0, sticky="e")
+
         self.restraints_entry2 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="-",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                    self.frame4,
+                                    labelpos="w",
+                                    label_text="-",
+                                    entry_bg="white",
+                                    value="1",
+                                    entry_width=3,
+                                    validate={"validator": "real"}
+                                    )
         self.restraints_entry2.grid(row=4, column=1, sticky="e")
 
         self.density_entry1 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="DENSITY",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                self.frame4,
+                                labelpos="w",
+                                label_text="DENSITY",
+                                entry_bg="white",
+                                value="1",
+                                entry_width=3,
+                                validate={"validator": "real"}
+                                )
         self.density_entry1.grid(row=5, column=0, sticky="e")
+
         self.density_entry2 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="-",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                self.frame4,
+                                labelpos="w",
+                                label_text="-",
+                                entry_bg="white",
+                                value="1",
+                                entry_width=3,
+                                validate={"validator": "real"}
+                                )
         self.density_entry2.grid(row=5, column=1, sticky="e")
 
         self.symmetry_entry1 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="SYMMETRY",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                self.frame4,
+                                labelpos="w",
+                                label_text="SYMMETRY",
+                                entry_bg="white",
+                                value="1",
+                                entry_width=3,
+                                validate={"validator": "real"}
+                                )
         self.symmetry_entry1.grid(row=6, column=0, sticky="e")
+
         self.symmetry_entry2 = Pmw.EntryField(
-            self.frame4,
-            labelpos="w",
-            label_text="-",
-            entry_bg="white",
-            value="1",
-            entry_width=3,
-            validate={
-                "validator": "real"})
+                                self.frame4,
+                                labelpos="w",
+                                label_text="-",
+                                entry_bg="white",
+                                value="1",
+                                entry_width=3,
+                                validate={"validator": "real"}
+                                )
         self.symmetry_entry2.grid(row=6, column=1, sticky="e")
 
         # self.chi2_entry1=Pmw.EntryField(self.frame4,labelpos="w",label_text="	CHI2",entry_bg="white",value="1",entry_width=3,validate={"validator":"real"})
@@ -530,7 +529,7 @@ class Parameters_Window:
         self.frame6 = Tkinter.LabelFrame(pw, text="Input data descriptors")
         self.frame6.grid(row=3, column=0, rowspan=2, sticky="nsew")
 
-        self.bzz2 = Tkinter.Frame(self.frame6)
+        self.bzz2 = Tkinter.Frame(self.frame6)  # what
         self.bzz2.pack(side="right")
         bzz2 = Tkinter.Label(self.bzz2, text="")
         bzz2.pack()  # (-_-)
@@ -542,81 +541,85 @@ class Parameters_Window:
         self.threshold_kvol_var.set(1)
 
         self.threshold_radio = Tkinter.Radiobutton(
-            self.frame7,
-            variable=self.threshold_kvol_var,
-            value=1,
-            command=lambda: self.choose_threshold_kvol(1))
+                                self.frame7,
+                                variable=self.threshold_kvol_var,
+                                value=1,
+                                command=lambda: self.choose_threshold_kvol(1)
+                                )
         self.threshold_radio.grid(row=0, column=2, sticky="e")
 
         self.kvol_radio = Tkinter.Radiobutton(
-            self.frame7,
-            variable=self.threshold_kvol_var,
-            value=2,
-            command=lambda: self.choose_threshold_kvol(2))
+                            self.frame7,
+                            variable=self.threshold_kvol_var,
+                            value=2,
+                            command=lambda: self.choose_threshold_kvol(2)
+                            )
         self.kvol_radio.grid(row=1, column=2, sticky="e")
 
         self.threshold_entry = Pmw.EntryField(
-            self.frame7,
-            labelpos="w",
-            label_text="THRESHOLD",
-            entry_bg="white",
-            value="20",
-            entry_width=10,
-            validate={
-                "validator": "real"})
+                                self.frame7,
+                                labelpos="w",
+                                label_text="THRESHOLD",
+                                entry_bg="white",
+                                value="20",
+                                entry_width=10,
+                                validate={"validator": "real"}
+                                )
         self.threshold_entry.grid(row=0, column=1, sticky="e")
+
         self.kvol_entry = Pmw.EntryField(
-            self.frame7,
-            labelpos="w",
-            label_text="KVOL",
-            entry_bg="white",
-            value="0.3",
-            entry_width=10,
-            validate={
-                "validator": "real"})
+                            self.frame7,
+                            labelpos="w",
+                            label_text="KVOL",
+                            entry_bg="white",
+                            value="0.3",
+                            entry_width=10,
+                            validate={"validator": "real"}
+                            )
         self.kvol_entry.grid(row=1, column=1, sticky="e")
+
         self.simbox_entry = Pmw.EntryField(
-            self.frame7,
-            labelpos="w",
-            label_text="SIMBOX",
-            entry_bg="white",
-            value="1.5",
-            entry_width=10,
-            validate={
-                "validator": "real"})
+                                self.frame7,
+                                labelpos="w",
+                                label_text="SIMBOX",
+                                entry_bg="white",
+                                value="1.5",
+                                entry_width=10,
+                                validate={"validator": "real"}
+                                )
         self.simbox_entry.grid(row=2, column=1, sticky="e")
+
         self.gridradius_entry = Pmw.EntryField(
-            self.frame7,
-            labelpos="w",
-            label_text="GRIDRADIUS",
-            entry_bg="white",
-            value="1.2",
-            entry_width=10,
-            validate={
-                "validator": "real"})
+                                    self.frame7,
+                                    labelpos="w",
+                                    label_text="GRIDRADIUS",
+                                    entry_bg="white",
+                                    value="1.2",
+                                    entry_width=10,
+                                    validate={"validator": "real"}
+                                    )
         self.gridradius_entry.grid(row=3, column=1, sticky="e")
+
         self.saxsradius_entry = Pmw.EntryField(
-            self.frame7,
-            labelpos="w",
-            label_text="SAXSRADIUS",
-            entry_bg="white",
-            value="2.0",
-            entry_width=10,
-            validate={
-                "validator": "real"})
+                                    self.frame7,
+                                    labelpos="w",
+                                    label_text="SAXSRADIUS",
+                                    entry_bg="white",
+                                    value="2.0",
+                                    entry_width=10,
+                                    validate={"validator": "real"}
+                                    )
         self.saxsradius_entry.grid(row=4, column=1, sticky="e")
+
         self.component_representation_menu = Pmw.OptionMenu(
-            self.frame7,
-            labelpos="w",
-            label_wraplength=100,
-            label_text="COMPONENT_REPRESENTATION",
-            initialitem="fa",
-            items=[
-                "ca",
-                "cacb",
-                "3p",
-                "fa"],
-            menubutton_width=5)
+                                        self.frame7,
+                                        labelpos="w",
+                                        label_wraplength=100,
+                                        label_text="COMPONENT_REPRESENTATION",
+                                        initialitem="fa",
+                                        items=["ca", "cacb", "3p", "fa"],
+                                        menubutton_width=5
+                                        )
         self.component_representation_menu.grid(row=6, column=1, sticky="e")
 
         # Output parameters
@@ -633,60 +636,63 @@ class Parameters_Window:
         self.frame9.pack(side="right")
 
         self.write_n_iter_entry = Pmw.EntryField(
-            self.frame9,
-            labelpos="w",
-            label_text="WRITE_N_ITER",
-            entry_bg="white",
-            value="1",
-            entry_width=10,
-            validate={
-                "validator": "real"})
+                                    self.frame9,
+                                    labelpos="w",
+                                    label_text="WRITE_N_ITER",
+                                    entry_bg="white",
+                                    value="1",
+                                    entry_width=10,
+                                    validate={"validator": "real"}
+                                    )
         self.write_n_iter_entry.grid(row=0, column=0, sticky="e")
 
         self.out_steps_entry = Pmw.EntryField(
-            self.frame9,
-            labelpos="w",
-            label_text="OUT_STEPS",
-            entry_bg="white",
-            value="1 2",
-            entry_width=10)
+                                self.frame9,
+                                labelpos="w",
+                                label_text="OUT_STEPS",
+                                entry_bg="white",
+                                value="1 2",
+                                entry_width=10
+                                )
         self.out_steps_entry.grid(row=1, column=0, sticky="e")
 
         self.struct_nr_entry = Pmw.EntryField(
-            self.frame9,
-            labelpos="w",
-            label_text="STRUCT_NR",
-            entry_bg="white",
-            value="1",
-            entry_width=10)
+                                self.frame9,
+                                labelpos="w",
+                                label_text="STRUCT_NR",
+                                entry_bg="white",
+                                value="1",
+                                entry_width=10
+                                )
         self.struct_nr_entry.grid(row=2, column=0, sticky="e")
 
         self.write_eachbetter_menu = Pmw.OptionMenu(
-            self.frame9,
-            labelpos="w",
-            label_wraplength=70,
-            label_text="WRITE_EACHBETTER",
-            initialitem="False",
-            items=[
-                "False",
-                "True"],
-            menubutton_width=5)
+                                        self.frame9,
+                                        labelpos="w",
+                                        label_wraplength=70,
+                                        label_text="WRITE_EACHBETTER",
+                                        initialitem="False",
+                                        items=["False", "True"],
+                                        menubutton_width=5
+                                        )
         self.write_eachbetter_menu.grid(row=3, column=0, sticky="e")
 
         self.write_n_iter_out_steps_var = Tkinter.IntVar()
 
         self.write_n_iter_radio = Tkinter.Radiobutton(
-            self.frame9,
-            variable=self.write_n_iter_out_steps_var,
-            value=1,
-            command=lambda: self.choose_write_n_iter_out_steps(1))
+                        self.frame9,
+                        variable=self.write_n_iter_out_steps_var,
+                        value=1,
+                        command=lambda: self.choose_write_n_iter_out_steps(1)
+                        )
         self.write_n_iter_radio.grid(row=0, column=1, sticky="e")
 
         self.out_steps_radio = Tkinter.Radiobutton(
-            self.frame9,
-            variable=self.write_n_iter_out_steps_var,
-            value=2,
-            command=lambda: self.choose_write_n_iter_out_steps(2))
+                        self.frame9,
+                        variable=self.write_n_iter_out_steps_var,
+                        value=2,
+                        command=lambda: self.choose_write_n_iter_out_steps(2)
+                        )
         self.out_steps_radio.grid(row=1, column=1, sticky="e")
 
         self.write_n_iter_out_steps_var.set(1)
@@ -705,16 +711,24 @@ class Parameters_Window:
         self.frame11.pack(fill="x")
 
         self.scaling_ranges_button = Tkinter.Button(
-            self.frame11, text="SCALE_PARAMS...", command=self.psrwin.deiconify)
+                                        self.frame11,
+                                        text="SCALE_PARAMS...",
+                                        command=self.psrwin.deiconify
+                                        )
         self.scaling_ranges_button.grid(
             row=0, column=0, sticky="ew", padx=12, pady=3)
 
         self.move_state_button = Tkinter.Button(
-            self.frame11, text="MOVE_STATE...", command=self.mvstwin.deiconify)
+                                    self.frame11,
+                                    text="MOVE_STATE...",
+                                    command=self.mvstwin.deiconify)
         self.move_state_button.grid(
             row=0, column=1, sticky="ew", padx=12, pady=3)
+
         self.covalent_bonds_button = Tkinter.Button(
-            self.frame11, text="COVALENT_BONDS...", command=self.covbonwin.deiconify)
+                                        self.frame11, text="COVALENT_BONDS...",
+                                        command=self.covbonwin.deiconify
+                                        )
         self.covalent_bonds_button.grid(
             row=0, column=2, sticky="ew", padx=12, pady=3)
 
@@ -730,20 +744,32 @@ class Parameters_Window:
             width=10,
             command=self.params_window.withdraw)
         closeparams_button.pack(side='right')
-        paramshelp_button = Tkinter.Button(self.hdac_frame, text="Help", width=10, command=lambda: webbrowser.open(
-            "http://genesilico.pl/pyry3d/index.php?option=com_content&view=article&id=52&Itemid=199#3.2"))
+
+        paramshelp_button = Tkinter.Button(
+                                self.hdac_frame,
+                                text="Help",
+                                width=10,
+                                command=lambda: webbrowser.open(
+                                     "http://genesilico.pl/pyry3d/index.php\
+                                     ?option=com_content&view=\
+                                     article&id=52&Itemid=199#3.2")
+                                )
         paramshelp_button.pack(side='left')
+
         paramsdef_button = Tkinter.Button(
-            self.hdac_frame,
-            text="Set defaults",
-            width=10,
-            command=self.set_defaults)
+                            self.hdac_frame,
+                            text="Set defaults",
+                            width=10,
+                            command=self.set_defaults
+                            )
         paramsdef_button.pack(side="left")
+
         applyparams_button = Tkinter.Button(
-            self.hdac_frame,
-            text="Apply",
-            width=10,
-            command=lambda: self.get_parameters)
+                                self.hdac_frame,
+                                text="Apply",
+                                width=10,
+                                command=lambda: self.get_parameters
+                                )
         applyparams_button.pack(side='right')
 
         self.choose_simmethod(1)
@@ -752,8 +778,6 @@ class Parameters_Window:
         self.get_parameters()
 
         self.params_window.protocol("WM_DELETE_WINDOW", self.handler)
-
-        # self.page2.mainloop()
 
     def handler(self):
         self.params_window.withdraw()
@@ -796,7 +820,7 @@ class Parameters_Window:
             self.setState(self.warning_frame, "normal")
 
     def choose_simmethod(self, x):
-        #"SimulatedAnnealing","Genetic","ReplicaExchange"
+        # "SimulatedAnnealing","Genetic","ReplicaExchange"
         if self.simmet_menu.getvalue() == "SimulatedAnnealing":
             self.ann_temp_entry.configure(entry_state="normal")
             self.replicaexchange_freq_entry.configure(entry_state="disabled")
@@ -847,7 +871,10 @@ class Parameters_Window:
             self.out_steps_entry.configure(entry_state="normal")
 
     def show_scalrang_window_example(self):
-        example = "PARAMSCALINGRANGES 	0 25 50\nPARAMSCALINGR1 	50 100\nPARAMSCALINGR2 	25 50\nPARAMSCALINGR3 	0 25"
+        example = "PARAMSCALINGRANGES 	0 25 50\n\
+                    PARAMSCALINGR1 	50 100\n\
+                    PARAMSCALINGR2 	25 50\n\
+                    PARAMSCALINGR3 	0 25"
         self.psrli.setvalue(example)
 
     def display_scaling_ranges_window(self):
@@ -855,24 +882,28 @@ class Parameters_Window:
         self.psrwin.title("SCALEPARAMS")
         self.psrwf = Tkinter.LabelFrame(self.psrwin, text="Scale params")
         self.psrwf.pack(fill="x")
+
         psr_label = Tkinter.Label(
             self.psrwf,
-            text="Use the field below to enter your parameters. \nClick [Help] for instructions.",
-            fg="blue").pack(
-            fill="x")
-        self.psrli = Pmw.ScrolledText(self.psrwf,
-                                      columnheader=1,
-                                      rowheader=0,
-                                      rowcolumnheader=0,
-                                      usehullsize=1,
-                                      hull_width=250,
-                                      hull_height=150,
-                                      text_wrap='none',
-                                      Header_foreground='black',
-                                      text_padx=4,
-                                      text_pady=4,
-                                      Header_padx=4,
-                                      )
+            text="Use the field below to enter your parameters. \n\
+                    Click [Help] for instructions.",
+            fg="blue")
+        psr_label.pack(fill="x")
+
+        self.psrli = Pmw.ScrolledText(
+                        self.psrwf,
+                        columnheader=1,
+                        rowheader=0,
+                        rowcolumnheader=0,
+                        usehullsize=1,
+                        hull_width=250,
+                        hull_height=150,
+                        text_wrap='none',
+                        Header_foreground='black',
+                        text_padx=4,
+                        text_pady=4,
+                        Header_padx=4,
+                        )
         self.psrli.pack(fill="x")
 
         up2 = ["Type in the field below"]
@@ -888,56 +919,74 @@ class Parameters_Window:
         self.psrf2.pack(fill="x")
 
         closepsr_button = Tkinter.Button(
-            self.psrf2,
-            text="Close",
-            width=10,
-            command=self.psrwin.withdraw)
+                            self.psrf2,
+                            text="Close",
+                            width=10,
+                            command=self.psrwin.withdraw
+                            )
         closepsr_button.pack(side='right')
-        psrhelp_button = Tkinter.Button(self.psrf2, text="Help", width=10, command=lambda: webbrowser.open(
-            "http://genesilico.pl/pyry3d/index.php?option=com_content&view=article&id=52&Itemid=199#3.2"))
+
+        psrhelp_button = Tkinter.Button(
+                            self.psrf2,
+                            text="Help",
+                            width=10,
+                            command=lambda: webbrowser.open(
+                                        "http://genesilico.pl/pyry3d/index.php\
+                                        ?option=com_content&view=article&id=52\
+                                        &Itemid=199#3.2")
+                                        )
         psrhelp_button.pack(side='left')
+
         psrdef_button = Tkinter.Button(
-            self.psrf2,
-            text="Show example",
-            width=10,
-            command=self.show_scalrang_window_example)  # ,command=self.set_default_parameters)
+                            self.psrf2,
+                            text="Show example",
+                            width=10,
+                            command=self.show_scalrang_window_example
+                            )
         psrdef_button.pack(side="left")
+
         applypsr_button = Tkinter.Button(
-            self.psrf2,
-            text="Apply",
-            width=10,
-            command=self.get_parameters)
+                            self.psrf2,
+                            text="Apply",
+                            width=10,
+                            command=self.get_parameters
+                            )
         applypsr_button.pack(side='right')
 
         self.psrwin.withdraw()
 
     def show_movestate_window_example(self):
         self.mvstli.setvalue(
-            "D movable 5 5 5 0.1 0.1 0.1 10 10 10 0.1 0.1 1 5 30")
+                "D movable 5 5 5 0.1 0.1 0.1 10 10 10 0.1 0.1 1 5 30")
 
     def display_move_state_window(self):
         self.mvstwin = Tkinter.Toplevel(self.params_window)
         self.mvstwin.title("MOVE_STATE")
         self.mvstwf = Tkinter.LabelFrame(self.mvstwin, text="Move state")
         self.mvstwf.pack(fill="x")
+
         mvst_label = Tkinter.Label(
-            self.mvstwf,
-            text="Use the field below to enter your parameters. \nClick [Help] for instructions.",
-            fg="blue").pack(
-            fill="x")
-        self.mvstli = Pmw.ScrolledText(self.mvstwf,
-                                       columnheader=1,
-                                       rowheader=0,
-                                       rowcolumnheader=0,
-                                       usehullsize=1,
-                                       hull_width=250,
-                                       hull_height=150,
-                                       text_wrap='none',
-                                       Header_foreground='black',
-                                       text_padx=4,
-                                       text_pady=4,
-                                       Header_padx=4,
-                                       )
+                        self.mvstwf,
+                        text="Use the field below to enter your parameters. \n\
+                                Click [Help] for instructions.",
+                        fg="blue"
+                        )
+        mvst_label.pack(fill="x")
+
+        self.mvstli = Pmw.ScrolledText(
+                        self.mvstwf,
+                        columnheader=1,
+                        rowheader=0,
+                        rowcolumnheader=0,
+                        usehullsize=1,
+                        hull_width=250,
+                        hull_height=150,
+                        text_wrap='none',
+                        Header_foreground='black',
+                        text_padx=4,
+                        text_pady=4,
+                        Header_padx=4,
+                        )
         self.mvstli.pack(fill="x")
 
         up2 = ["Type in the field below"]
@@ -949,32 +998,44 @@ class Parameters_Window:
         self.mvstli.component('columnheader').insert('0.0', headerLine)
 
         self.mvstf2 = Tkinter.Frame(
-            self.mvstwin, bd=1, relief="ridge", pady=3, padx=3)
+                        self.mvstwin,
+                        bd=1,
+                        relief="ridge",
+                        pady=3,
+                        padx=3
+                        )
         self.mvstf2.pack(fill="x")
 
         closemvst_button = Tkinter.Button(
-            self.mvstf2,
-            text="Close",
-            width=10,
-            command=self.mvstwin.withdraw)
+                            self.mvstf2,
+                            text="Close",
+                            width=10,
+                            command=self.mvstwin.withdraw
+                            )
         closemvst_button.pack(side='right')
+
         mvsthelp_button = Tkinter.Button(
-            self.mvstf2,
-            text="Help",
-            width=10,
-            command=lambda: webbrowser.open("http://genesilico.pl/pyry3d/faq/#3.2"))
+                            self.mvstf2,
+                            text="Help",
+                            width=10,
+                            command=lambda: webbrowser.open(
+                                    "http://genesilico.pl/pyry3d/faq/#3.2")
+                                    )
         mvsthelp_button.pack(side='left')
+
         mvstdef_button = Tkinter.Button(
-            self.mvstf2,
-            text="Show example",
-            width=10,
-            command=self.show_movestate_window_example)  # ,command=self.set_default_parameters)
+                            self.mvstf2,
+                            text="Show example",
+                            width=10,
+                            command=self.show_movestate_window_example)
         mvstdef_button.pack(side="left")
+
         applymvst_button = Tkinter.Button(
-            self.mvstf2,
-            text="Apply",
-            width=10,
-            command=self.get_parameters)
+                            self.mvstf2,
+                            text="Apply",
+                            width=10,
+                            command=self.get_parameters
+                            )
         applymvst_button.pack(side='right')
 
         self.mvstwin.withdraw()

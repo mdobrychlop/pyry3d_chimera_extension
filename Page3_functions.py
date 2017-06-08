@@ -14,8 +14,6 @@ Display = Display()
 
 
 class Parameters_Window:
-    def get_parameters(self):
-        pass
 
     def display(self):
         self.params_window = Tkinter.Tk()
@@ -1049,24 +1047,28 @@ class Parameters_Window:
         self.covbonwf = Tkinter.LabelFrame(
             self.covbonwin, text="Covalent bonds")
         self.covbonwf.pack(fill="x")
+
         covbon_label = Tkinter.Label(
-            self.covbonwf,
-            text="Use the field below to enter your parameters. \nClick [Help] for instructions.",
-            fg="blue").pack(
-            fill="x")
-        self.covbonli = Pmw.ScrolledText(self.covbonwf,
-                                         columnheader=1,
-                                         rowheader=0,
-                                         rowcolumnheader=0,
-                                         usehullsize=1,
-                                         hull_width=250,
-                                         hull_height=150,
-                                         text_wrap='none',
-                                         Header_foreground='black',
-                                         text_padx=4,
-                                         text_pady=4,
-                                         Header_padx=4,
-                                         )
+                        self.covbonwf,
+                        text="Use the field below to enter your parameters. \n\
+                                Click [Help] for instructions.",
+                        fg="blue")
+        covbon_label.pack(fill="x")
+
+        self.covbonli = Pmw.ScrolledText(
+                            self.covbonwf,
+                            columnheader=1,
+                            rowheader=0,
+                            rowcolumnheader=0,
+                            usehullsize=1,
+                            hull_width=250,
+                            hull_height=150,
+                            text_wrap='none',
+                            Header_foreground='black',
+                            text_padx=4,
+                            text_pady=4,
+                            Header_padx=4,
+                            )
         self.covbonli.pack(fill="x")
 
         up2 = ["Type in the field below"]
@@ -1082,28 +1084,36 @@ class Parameters_Window:
         self.covbonf2.pack(fill="x")
 
         closecovbon_button = Tkinter.Button(
-            self.covbonf2,
-            text="Close",
-            width=10,
-            command=self.covbonwin.withdraw)
+                                self.covbonf2,
+                                text="Close",
+                                width=10,
+                                command=self.covbonwin.withdraw
+                                )
         closecovbon_button.pack(side='right')
+
         covbonhelp_button = Tkinter.Button(
-            self.covbonf2,
-            text="Help",
-            width=10,
-            command=lambda: webbrowser.open("http://genesilico.pl/pyry3d/faq/#3.2"))
+                                self.covbonf2,
+                                text="Help",
+                                width=10,
+                                command=lambda: webbrowser.open(
+                                    "http://genesilico.pl/pyry3d/faq/#3.2")
+                                    )
         covbonhelp_button.pack(side='left')
+
         covbondef_button = Tkinter.Button(
-            self.covbonf2,
-            text="Show example",
-            width=10,
-            command=self.show_covbond_window_example)  # ,command=self.set_default_parameters)
+                            self.covbonf2,
+                            text="Show example",
+                            width=10,
+                            command=self.show_covbond_window_example
+                            )
         covbondef_button.pack(side="left")
+
         applycovbon_button = Tkinter.Button(
-            self.covbonf2,
-            text="Apply",
-            width=10,
-            command=self.get_parameters)
+                                self.covbonf2,
+                                text="Apply",
+                                width=10,
+                                command=self.get_parameters
+                                )
         applycovbon_button.pack(side='right')
 
         self.covbonwin.withdraw()
@@ -1170,82 +1180,93 @@ class Parameters_Window:
         self.reductmet_menu.invoke("roulette")
 
     def get_parameters(self):
+        """
+        Gets values of parameters provided by the user.
+        Creates strings ready to be written as cfg file lines.
+        """
         self.simmethod = "SIMMETHOD " + self.simmet_menu.getvalue()
         self.steps = "STEPS " + self.steps_entry.getvalue()
         self.maxrot = "MAXROT " + self.maxrot_entry.getvalue()
         self.maxtrans = "MAXTRANS " + self.maxtrx_entry.getvalue() + " " + \
-            self.maxtry_entry.getvalue() + " " + self.maxtrz_entry.getvalue()
+                        self.maxtry_entry.getvalue() + " " + \
+                        self.maxtrz_entry.getvalue()
         self.reheat = "REHEAT " + self.reheat_menu.getvalue() + " " + \
-            self.reheat_entry.getvalue()
-
+                      self.reheat_entry.getvalue()
         self.outbox = "OUTBOX " + self.outbox_entry1.getvalue() + " " + \
-            self.outbox_entry2.getvalue()
-        self.map_freespace = "MAP_FREESPACE " + self.map_freespace_entry1.getvalue() + \
-            " " + self.map_freespace_entry2.getvalue()
+                      self.outbox_entry2.getvalue()
+        self.map_freespace = "MAP_FREESPACE " + \
+                             self.map_freespace_entry1.getvalue() + " " + \
+                             self.map_freespace_entry2.getvalue()
         if self.clashes_menu.getvalue() == "CLASHES":
-            self.clashes = "CLASHES " + self.clashes_entry1.getvalue() + " " + \
-                self.clashes_entry2.getvalue()
+            self.clashes = "CLASHES " + \
+                           self.clashes_entry1.getvalue() + " " + \
+                           self.clashes_entry2.getvalue()
         else:
-            self.clashes = "CLASHES_ALLATOMS " + self.clashes_entry1.getvalue() + " " + \
-                self.clashes_entry2.getvalue()
-        self.restraints = "RESTRAINTS " + self.restraints_entry1.getvalue() + " " + \
-            self.restraints_entry2.getvalue()
+            self.clashes = "CLASHES_ALLATOMS " + \
+                           self.clashes_entry1.getvalue() + " " + \
+                           self.clashes_entry2.getvalue()
+        self.restraints = "RESTRAINTS " + \
+                          self.restraints_entry1.getvalue() + " " + \
+                          self.restraints_entry2.getvalue()
         self.density = "DENSITY " + self.density_entry1.getvalue() + " " + \
-            self.density_entry2.getvalue()
+                       self.density_entry2.getvalue()
         self.symmetry = "SYMMETRY " + self.symmetry_entry1.getvalue() + " " + \
-            self.symmetry_entry2.getvalue()
-        #self.chi2="CHI2 "+self.chi2_entry1.getvalue()+" "+self.chi2_entry2.getvalue()
-        #self.rge="RGE "+self.rge_entry1.getvalue()+" "+self.rge_entry2.getvalue()
-
+                        self.symmetry_entry2.getvalue()
+        # self.chi2="CHI2 "+self.chi2_entry1.getvalue()+" "+self.chi2_entry2.getvalue()
+        # self.rge="RGE "+self.rge_entry1.getvalue()+" "+self.rge_entry2.getvalue()
         self.threshold = "THRESHOLD " + self.threshold_entry.getvalue()
         self.kvol = "KVOL " + self.kvol_entry.getvalue()
         self.simbox = "SIMBOX " + self.simbox_entry.getvalue()
         self.gridradius = "GRIDRADIUS " + self.gridradius_entry.getvalue()
         self.component_representation = "COMPONENT_REPRESENTATION " + \
             self.component_representation_menu.getvalue()
-
-        self.rotation_freq = "ROTATION_FREQ " + self.rotation_freq_entry.getvalue()
+        self.rotation_freq = "ROTATION_FREQ " + \
+                             self.rotation_freq_entry.getvalue()
         self.rotation_cov_freq = "ROTATION_COV_FREQ " + \
             self.rotation_cov_freq_entry.getvalue()
         self.translation_freq = "TRANSLATION_FREQ " + \
             self.translation_freq_entry.getvalue()
-        self.exchange_freq = "EXCHANGE_FREQ " + self.exchange_freq_entry.getvalue()
-        self.simul_dd_freq = "SIMUL_DD_FREQ " + self.simul_dd_freq_entry.getvalue()
-
+        self.exchange_freq = "EXCHANGE_FREQ " + \
+                             self.exchange_freq_entry.getvalue()
+        self.simul_dd_freq = "SIMUL_DD_FREQ " + \
+                             self.simul_dd_freq_entry.getvalue()
         self.translation_all_freq = "TRANSLATION_ALL_FREQ " + \
-            self.translation_all_freq_entry.getvalue()
+                                    self.translation_all_freq_entry.getvalue()
         self.rotation_all_freq = "ROTATION_ALL_FREQ " + \
-            self.rotation_all_freq_entry.getvalue()
+                                 self.rotation_all_freq_entry.getvalue()
         self.exchangesample_freq = "EXCHANGESAMPLE_FREQ " + \
-            self.exchangesample_freq_entry.getvalue()
+                                   self.exchangesample_freq_entry.getvalue()
 
-        self.write_n_iter = "WRITE_N_ITER " + self.write_n_iter_entry.getvalue()
+        self.write_n_iter = "WRITE_N_ITER " + \
+                            self.write_n_iter_entry.getvalue()
         self.struct_nr = "STRUCT_NR " + self.struct_nr_entry.getvalue()
         self.out_steps = "OUT_STEPS " + self.out_steps_entry.getvalue()
         self.write_eachbetter = "WRITE_EACHBETTER " + \
-            self.write_eachbetter_menu.getvalue()
-
+                                self.write_eachbetter_menu.getvalue()
         self.ann_temp = "ANN_TEMP " + self.ann_temp_entry.getvalue()
         self.replicaexchange_freq = "REPLICAEXCHANGE_FREQ " + \
-            self.replicaexchange_freq_entry.getvalue()
+                                    self.replicaexchange_freq_entry.getvalue()
         self.replicatemperatures = "REPLICATEMPERATURES " + \
-            self.replicatemperatures_entry.getvalue()
+                                   self.replicatemperatures_entry.getvalue()
         self.reductmethod = "REDUCTMETHOD " + self.reductmet_menu.getvalue()
-
         self.params_scaling_ranges = self.psrli.getvalue()
         self.move_state = self.mvstli.getvalue()
         self.covalent_bonds = self.covbonli.getvalue()
 
-        self.obvious_params = [self.simmethod, self.steps, self.maxrot,
-                               self.maxtrans, self.outbox, self.map_freespace,
-                               self.clashes, self.restraints, self.density, self.symmetry,
-                               #self.chi2, self.rge,
-                               self.simbox,
-                               self.gridradius, self.component_representation,
-                               self.rotation_freq, self.rotation_cov_freq, self.translation_freq,
-                               self.exchange_freq, self.simul_dd_freq, self.translation_all_freq,
-                               self.rotation_all_freq, self.struct_nr, self.write_eachbetter,
-                               self.exchangesample_freq]
+        self.obvious_params = [self.simmethod, self.steps,
+                               self.maxrot, self.maxtrans,
+                               self.outbox, self.map_freespace,
+                               self.clashes, self.restraints,
+                               self.density, self.symmetry,
+                               # self.chi2, self.rge,
+                               self.simbox, self.gridradius,
+                               self.component_representation,
+                               self.rotation_freq, self.rotation_cov_freq,
+                               self.translation_freq, self.exchange_freq,
+                               self.simul_dd_freq, self.translation_all_freq,
+                               self.rotation_all_freq, self.struct_nr,
+                               self.write_eachbetter, self.exchangesample_freq,
+                               ]
 
     def generate_config(self, outpath):
 

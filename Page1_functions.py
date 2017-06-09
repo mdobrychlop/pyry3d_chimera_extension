@@ -13,11 +13,11 @@ class P1F:
     def __init__(self):
         pass
 
-    def choosemap(self, maplist):
+    def choosemap(self, maplist, initialdir):
         p = Tkinter.Tk()
         p.withdraw()
         mappath = tkFileDialog.askopenfilename(
-                    parent=p, initialdir="/", title="Choose .map file",
+                    parent=p, initialdir=initialdir, title="Choose .map file",
                     filetypes=[("EM and SAXS shape descriptors", ".map"),
                                ("EM and SAXS shape descriptors", ".mrc"),
                                ("EM and SAXS shape descriptors", ".pdb"),
@@ -30,12 +30,12 @@ class P1F:
             maplist.settext("#0 "+mapname)
         return mappath
 
-    def choosestruct(self):
+    def choosestruct(self, initialdir):
         p = Tkinter.Tk()
         p.withdraw()
         slist = []
         structures = tkFileDialog.askopenfilenames(
-                        parent=p, initialdir="/",
+                        parent=p, initialdir=initialdir,
                         title="Choose structure files",
                         filetypes=[("pdb files", ".pdb")]
                         )
@@ -43,14 +43,15 @@ class P1F:
         # WARNING! askopenfilenames:
         # on Windows, it returns a string. On Linux, it returns a list.
 
-        if type(structures) is list or type(structures) is tuple:
+        if type(structures) is list or type(structures) is tuple:  # if on Linux
             for i in structures:
                 slist.append(i)
-        else:
+        elif len(structures) > 1:  # if on Windows and anything was chosen
             structures = structures.split(" ")
             for i in structures:
                 slist.append(i)
-
+        else:  # if "cancel"
+            pass
         return slist
 
     def opencommand(self, mappath, slist):
@@ -97,6 +98,9 @@ class P1F:
         smlist.settext("")
 
     def define_pyry3d_path(self, parent):
+        """
+        fossil, get rid of it
+        """
         path = tkFileDialog.askdirectory(parent=parent, initialdir="/",
                                          title="Point the PyRy3D directory"
                                          )

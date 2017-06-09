@@ -33,3 +33,9 @@ class Paths:
         self.ss_outpath = ""
         # ---- USER DETERMINED SEQUENCE PATH
         self.user_seqpath = ""
+
+    def find_localisation(self):
+        directory, filename = os.path.split(__file__)
+        directory = directory.split("\\")
+        directory = "/".join(directory)
+        return directory

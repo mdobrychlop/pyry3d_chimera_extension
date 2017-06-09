@@ -864,10 +864,7 @@ class Parameters_Window():
             self.out_steps_entry.configure(entry_state="normal")
 
     def show_scalrang_window_example(self):
-        example = "PARAMSCALINGRANGES 	0 25 50\n\
-                    PARAMSCALINGR1 	50 100\n\
-                    PARAMSCALINGR2 	25 50\n\
-                    PARAMSCALINGR3 	0 25"
+        example = "PARAMSCALINGRANGES 	0 25 50\nPARAMSCALINGR1 	50 100\nPARAMSCALINGR2 	25 50\nPARAMSCALINGR3 	0 25"
         self.psrli.setvalue(example)
 
     def display_scaling_ranges_window(self):

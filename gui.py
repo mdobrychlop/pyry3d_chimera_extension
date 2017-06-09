@@ -1,14 +1,3 @@
-from Page1_functions import P1F
-from Page3_functions import P3F
-from Paths import Paths
-from Dialogs import Display
-from WidgetState import WS
-from cluster_complexes import start_clustering
-from chimera import runCommand
-from chimera.baseDialog import ModelessDialog
-from Modules.Error.Errors import InputError, ConfigError
-from Calculate import calculate_threshold, run
-from Draw_Plot import Log_Diagram
 import os
 import sys
 import glob
@@ -16,22 +5,38 @@ import shutil
 import Tkinter
 import Pmw
 import tkFileDialog
-import webbrowser
-import chimera
 import tkMessageBox
+
+import webbrowser
+
+import chimera
+from chimera import runCommand
+from chimera.baseDialog import ModelessDialog
+
+
+from Page1_functions import P1F
+from Page3_functions import P3F
+from Paths import Paths
+from Dialogs import Display
+from WidgetState import WS
 
 import PyRy3D_Extension
 
-
-# This is a hack, no idea why but this must be here
-# for the GUI to even work. Sorry.
 work_already = Pmw.EntryField()
 
-WS = WS()
-P1F = P1F()
-P3F = P3F()
-Paths = Paths()
-Display = Display()
+P1F=P1F(); P3F=P3F(); Paths=Paths(); Display=Display(); WS=WS()
+
+Paths.pyrypath = Paths.pluginpath + "/PyRy3D"
+
+if os.path.exists(Paths.pyrypath) is False:
+    tkMessageBox.showwarning("PyRy3D directory?", "PyRy3D software should be placed in PATH_TO_PYRY3D_EXTENSION/PyRy3D directory.")
+
+sys.path.append(Paths.pyrypath)
+
+from Modules.Error.Errors import InputError, ConfigError
+from Calculate import calculate_threshold
+from Draw_Plot import Log_Diagram
+from Calculate import run
 
 
 class PyRyDialog(ModelessDialog):
@@ -47,18 +52,21 @@ class PyRyDialog(ModelessDialog):
 
     title = "PyRy3D Extension"
 
+    def save_path(self, newpath):
+        print newpath
+        if newpath != "":
+            self.initialdir = newpath
+
     def fillInUI(self, parent):
+
+        self.initialdir = "/"
 
         # ----- U S E R S   I N T E R F A C E
 
         self.parento = parent
 
         self.StatusPathFrame = Tkinter.Frame(parent)
-        self.StatusPathFrame.pack()
-
-        # ----- FRAME FOR DETERMINING PYRY3D PATH, NOT USED ATM
-
-        self.pyry3dpath_dialog()
+        self.StatusPathFrame.pack(fill="x")
 
         # ----- SEPARATING THE WINDOW IN TWO (STATUS + NOTEBOOK)
 
@@ -67,11 +75,11 @@ class PyRyDialog(ModelessDialog):
                             text="PYRY3D EXTENSION STATUS:",
                             fg="blue", pady=3, padx=3
                             )
-        # self.StatusFrame.grid(row=0,column=0,sticky="nsew", padx=10, pady=5)
+        self.StatusFrame.pack(fill="x")
 
         self.StatusLabel = Tkinter.Label(
                             self.StatusFrame,
-                            text="Please specify your PyRy3D path.",
+                            text="Welcome to PyRy3D Chimera Extension",
                             fg="blue"
                             )
         self.StatusLabel.pack()
@@ -249,17 +257,16 @@ class PyRyDialog(ModelessDialog):
         self.cfg_choice(self.cfg_v)
 
         # ----- FRAME2: RESTRAINTS
+        self.restraints_frame = Tkinter.Frame(
+                        self.page2, bd=1,
+                        relief="ridge",
+                        pady=3, padx=3
+                        )
+        self.restraints_frame.pack(fill="x")
+        rsf = self.restraints_frame
 
         res_v = Tkinter.IntVar(rsf)
         res_v.set(1)
-
-        self.restraints_frame = Tkinter.Frame(
-                                self.page2, bd=1,
-                                relief="ridge",
-                                pady=3, padx=3
-                                )
-        self.restraints_frame.pack(fill="x")
-        rsf = self.restraints_frame
 
         self.res_empty_radiobutton = Tkinter.Radiobutton(
                                         rsf,
@@ -292,10 +299,6 @@ class PyRyDialog(ModelessDialog):
         self.res_choice(res_v)
 
         # ----- FRAME3: SEQUENCES
-
-        self.simseq_v = Tkinter.IntVar(sframe)
-        self.simseq_v.set(1)
-
         self.sequence_frame = Tkinter.Frame(
                                 self.page2, bd=1,
                                 relief="ridge",
@@ -304,6 +307,9 @@ class PyRyDialog(ModelessDialog):
         self.sequence_frame.pack(fill="x")
 
         sframe = self.sequence_frame
+
+        self.simseq_v = Tkinter.IntVar(sframe)
+        self.simseq_v.set(1)
 
         self.seq_gen_radiobutton = Tkinter.Radiobutton(
                                     sframe,
@@ -660,18 +666,20 @@ class PyRyDialog(ModelessDialog):
         def set_anim_movie_out():
             path = tkFileDialog.askdirectory(
                     parent=parent,
-                    initialdir="/",
+                    initialdir=self.initialdir,
                     title="Choose directory"
                     )
             self.anim_dir_entry.setvalue(path)
+            self.save_path(path)
 
         def set_anim_img_out():
             path = tkFileDialog.askdirectory(
                     parent=parent,
-                    initialdir="/",
+                    initialdir=self.initialdir,
                     title="Choose directory"
                     )
             self.anim_img_out.setvalue(path)
+            self.save_path(path)
 
         def generate_movie():
             from Movies import Anim
@@ -715,21 +723,23 @@ class PyRyDialog(ModelessDialog):
 
         def anim_get_inpdir():
             path = tkFileDialog.askdirectory(
-                    initialdir="/",
+                    initialdir=self.initialdir,
                     title="Choose input folder"
                     )
             self.anim_dir_entry.setvalue(path)
             self.anim_dir_entry.configure(entry_state="disabled")
             potential_frames = os.listdir(path)
             self.potential_frames_number = len(potential_frames)
+            self.save_path(path)
 
         def anim_get_imgdir():
             path = tkFileDialog.askdirectory(
-                    initialdir="/",
+                    initialdir=self.initialdir,
                     title="Choose input folder"
                     )
             self.anim_img_out.setvalue(path)
             self.anim_img_out.configure(entry_state="disabled")
+            self.save_path(path)
 
         def anim_calc_frames():
             frac = self.potential_frames_number / int(self.rec_entry.getvalue())
@@ -738,12 +748,13 @@ class PyRyDialog(ModelessDialog):
         def anim_get_outfile():
             allowed_format = "."+self.anim_format.getvalue()
             path = tkFileDialog.asksaveasfilename(
-                    initialdir="/",
+                    initialdir=self.initialdir,
                     title="Choose output file",
                     filetypes=[("movie files", allowed_format)]
                     )
             self.anim_out_entry.setvalue(path)
             self.anim_out_entry.configure(entry_state="disabled")
+            self.save_path(path)
 
         # ----- ADDING FOURTH PAGE'S CONTENT
 
@@ -1219,7 +1230,6 @@ class PyRyDialog(ModelessDialog):
         # ----- ADDING NOTEBOOK'S SIXTH PAGE - CLUSTERING
 
         self.page6 = self.notebook.add("Clustering")
-        page6 = self.page6
 
         # ----- ADDING SIXTH PAGE'S CONTENT
 
@@ -1332,7 +1342,7 @@ class PyRyDialog(ModelessDialog):
                                     label_text="Number of structures:",
                                     entry_width=15,
                                     entry_bg="white",
-                                    validate={"validator":"real"}
+                                    validate={"validator": "real"}
                                     )
         self.p6_numstruct_entry.grid(row=2, column=0, sticky="e")
 
@@ -1419,12 +1429,12 @@ class PyRyDialog(ModelessDialog):
                                 )
         self.p6_start_button.pack(side="right")
 
-        self.notebook.tab(0).configure(state="disabled")
+        self.notebook.tab(0).configure(state="normal")
         self.notebook.tab(1).configure(state="disabled")
         self.notebook.tab(2).configure(state="disabled")
-        self.notebook.tab(3).configure(state="disabled")
-        self.notebook.tab(4).configure(state="disabled")
-        self.notebook.tab(5).configure(state="disabled")
+        self.notebook.tab(3).configure(state="normal")
+        self.notebook.tab(4).configure(state="normal")
+        self.notebook.tab(5).configure(state="normal")
 
         self.notebook.setnaturalsize()
 
@@ -1513,66 +1523,74 @@ class PyRyDialog(ModelessDialog):
     def clust_input_set(self):
         path = tkFileDialog.askdirectory(
                 parent=self.page5,
-                initialdir="/",
+                initialdir=self.initialdir,
                 title="Choose input folder"
                 )
         self.p6_input_entry.setvalue(path)
+        self.save_path(path)
 
     def clust_map_set(self):
         path = tkFileDialog.askopenfilename(
                 parent=self.page5,
-                initialdir="/",
+                initialdir=self.initialdir,
                 title="Choose density map file"
                 )
         self.p6_map_entry.setvalue(path)
+        self.save_path(path)
 
     def clust_out_set(self):
         path = tkFileDialog.askdirectory(
             parent=self.page5,
-            initialdir="/",
+            initialdir=self.initialdir,
             title="Choose output folder"
             )
         self.p6_output_entry.setvalue(path)
+        self.save_path(path)
 
     def ranking_input_set(self):
         path = tkFileDialog.askdirectory(
                 parent=self.page5,
-                initialdir="/",
+                initialdir=self.initialdir,
                 title="Choose input folder"
                 )
         self.p5_input_entry.setvalue(path)
+        self.save_path(path)
 
     def ranking_seq_set(self):
         path = tkFileDialog.askopenfilename(
                 parent=self.page5,
-                initialdir="/",
+                initialdir=self.initialdir,
                 title="Choose sequences file"
                 )
         self.p5_seq_entry.setvalue(path)
+        self.save_path(path)
 
     def ranking_cfg_set(self):
         path = tkFileDialog.askopenfilename(
                 parent=self.page5,
-                initialdir="/",
+                initialdir=self.initialdir,
                 title="Choose config file"
                 )
         self.p5_cfg_entry.setvalue(path)
+        self.save_path(path)
 
     def ranking_res_set(self):
         path = tkFileDialog.askopenfilename(
                 parent=self.page5,
-                initialdir="/",
+                initialdir=self.initialdir,
                 title="Choose restraints file"
                 )
         self.p5_res_entry.setvalue(path)
+        self.save_path(path)
 
     def ranking_map_set(self):
         path = tkFileDialog.askopenfilename(
                 parent=self.page5,
-                initialdir="/",
+                initialdir=self.initialdir,
                 title="Choose density map file"
                 )
         self.p5_map_entry.setvalue(path)
+        self.save_path(path)
 
     def check_clustsort(self):
         if self.clustsort.get() == 0:
@@ -1595,12 +1613,11 @@ class PyRyDialog(ModelessDialog):
 
     def choosecomp(self):
         if self.complist == []:
-            self.complist = P1F.choosestruct()
+            self.complist = P1F.choosestruct(self.initialdir)
         else:
-            newcomponents = P1F.choosestruct()
+            newcomponents = P1F.choosestruct(self.initialdir)
             for i in newcomponents:
                 self.complist.append(i)
-        o = len(self.complist)
         u = 1
         labeltext = ""
         for i in self.complist:
@@ -1611,11 +1628,16 @@ class PyRyDialog(ModelessDialog):
                 labeltext = labeltext+"\n#"+str(u)+" "+sname
             u = u+1
         self.struli.settext(labeltext)
+        if self.complist != []:
+            last_directory = "/".join(self.complist[-1].split("/")[:-1])
+            self.save_path(last_directory)
 
     def choosemap(self):
-        Paths.mappath = P1F.choosemap(self.mapli)
+        Paths.mappath = P1F.choosemap(self.mapli, self.initialdir)
         if Paths.mappath == ():
             Paths.mappath = ""
+        last_directory = "/".join(Paths.mappath.split("/")[:-1])
+        self.save_path(last_directory)
 
     def clear(self):
         P1F.clearlist(self.struli)
@@ -1654,23 +1676,22 @@ class PyRyDialog(ModelessDialog):
             if rly1 is True:
                 rly2 = tkMessageBox.askyesno(
                         "Warning",
-                        "This will close all opened models before\
-                         loading new data. Continue?"
+                        "This will close all opened models before loading new data. Continue?"
                         )
-            if rly2 is True:
-                runCommand("close all")
-                P1F.opencommand(Paths.mappath, self.complist)
-                P1F.writeAllPDBs(Paths.temppath, Paths.mappath)
-                runCommand("windowsize 9999 9999")
-                self.open_button.configure(state="disabled")
-                self.dens_button.configure(state="disabled")
-                self.comp_button.configure(state="disabled")
-                self.clear_button.configure(state="disabled")
-                self.new_session_button.configure(state="normal")
-                self.notebook.tab(1).configure(state="normal")
-                self.notebook.tab(2).configure(state="normal")
-                self.notebook.tab(3).configure(state="normal")
-                self.notebook.tab(3).configure(state="normal")
+                if rly2 is True:
+                    runCommand("close all")
+                    P1F.opencommand(Paths.mappath, self.complist)
+                    P1F.writeAllPDBs(Paths.temppath, Paths.mappath)
+                    runCommand("windowsize 9999 9999")
+                    self.open_button.configure(state="disabled")
+                    self.dens_button.configure(state="disabled")
+                    self.comp_button.configure(state="disabled")
+                    self.clear_button.configure(state="disabled")
+                    self.new_session_button.configure(state="normal")
+                    self.notebook.tab(1).configure(state="normal")
+                    self.notebook.tab(2).configure(state="normal")
+                    self.notebook.tab(3).configure(state="normal")
+                    self.notebook.tab(3).configure(state="normal")
 
     # ----- FUNCTIONS TRIGGERED BY WIDGETS ON THE --- SECOND PAGE ---
 
@@ -1700,8 +1721,7 @@ class PyRyDialog(ModelessDialog):
         if Paths.ss_outpath != "":
             rly = tkMessageBox.askyesno(
                     "Warning",
-                    "All files in "+Paths.ss_outpath+" will be deleted.\
-                     Continue?"
+                    "All files in "+Paths.ss_outpath+" will be deleted. Continue?"
                      )
             if rly is True:
                 self.autoscore_button.configure(state="normal")
@@ -1787,13 +1807,13 @@ class PyRyDialog(ModelessDialog):
                         )
             self.p5_seq_button.configure(state="normal")
             self.p5_seq_text_button.configure(state="disabled")
-    if variable.get() == 3:
-            self.p5_seq_entry.configure(
-                        label_state="disabled",
-                        entry_state="disabled"
-                        )
-            self.p5_seq_button.configure(state="disabled")
-            self.p5_seq_text_button.configure(state="normal")
+        if variable.get() == 3:
+                self.p5_seq_entry.configure(
+                            label_state="disabled",
+                            entry_state="disabled"
+                            )
+                self.p5_seq_button.configure(state="disabled")
+                self.p5_seq_text_button.configure(state="normal")
 
     def res_choice(self, variable):
         if variable.get() == 1:
@@ -2206,7 +2226,7 @@ class PyRyDialog(ModelessDialog):
                     if os.path.exists(Paths.temp_out_path):
                         shutil.rmtree(Paths.temp_out_path)
 
-                self.update_status("lime green","READY.")
+                self.update_status("lime green", "READY.")
                 self.notebook.tab(0).configure(state="normal")
                 self.notebook.tab(1).configure(state="normal")
                 self.notebook.tab(2).configure(state="normal")
@@ -2218,51 +2238,50 @@ class PyRyDialog(ModelessDialog):
                 self.threshold_button.configure(state="normal")
 
                 ld.draw_diagram(logfile)
-        
+
             except InputError as e:
-            tkMessageBox.showwarning("Input error", e)
-            
-            self.update_status("lime green","READY.")
-            self.notebook.tab(0).configure(state="normal")
-            self.notebook.tab(1).configure(state="normal")
-            self.notebook.tab(2).configure(state="normal")
-            self.notebook.tab(3).configure(state="normal")
-            self.notebook.tab(4).configure(state="normal")
-            self.notebook.tab(5).configure(state="normal")
-            self.autoscore_button.configure(state="normal")
-            self.simulation_button.configure(state="normal")
-            self.threshold_button.configure(state="normal")
-            
+                tkMessageBox.showwarning("Input error", e)
+
+                self.update_status("lime green","READY.")
+                self.notebook.tab(0).configure(state="normal")
+                self.notebook.tab(1).configure(state="normal")
+                self.notebook.tab(2).configure(state="normal")
+                self.notebook.tab(3).configure(state="normal")
+                self.notebook.tab(4).configure(state="normal")
+                self.notebook.tab(5).configure(state="normal")
+                self.autoscore_button.configure(state="normal")
+                self.simulation_button.configure(state="normal")
+                self.threshold_button.configure(state="normal")
+
             except ConfigError as e:
-            tkMessageBox.showwarning("Config error", e)
-            
-            self.update_status("lime green","READY.")
-            self.notebook.tab(0).configure(state="normal")
-            self.notebook.tab(1).configure(state="normal")
-            self.notebook.tab(2).configure(state="normal")
-            self.notebook.tab(3).configure(state="normal")
-            self.notebook.tab(4).configure(state="normal")
-            self.notebook.tab(5).configure(state="normal")
-            self.autoscore_button.configure(state="normal")
-            self.simulation_button.configure(state="normal")
-            self.threshold_button.configure(state="normal")
-            
+                tkMessageBox.showwarning("Config error", e)
+
+                self.update_status("lime green", "READY.")
+                self.notebook.tab(0).configure(state="normal")
+                self.notebook.tab(1).configure(state="normal")
+                self.notebook.tab(2).configure(state="normal")
+                self.notebook.tab(3).configure(state="normal")
+                self.notebook.tab(4).configure(state="normal")
+                self.notebook.tab(5).configure(state="normal")
+                self.autoscore_button.configure(state="normal")
+                self.simulation_button.configure(state="normal")
+                self.threshold_button.configure(state="normal")
+
             except Exception as e:
-            tkMessageBox.showwarning("Error", e)
-            
-            self.update_status("lime green","READY.")
-            self.notebook.tab(0).configure(state="normal")
-            self.notebook.tab(1).configure(state="normal")
-            self.notebook.tab(2).configure(state="normal")
-            self.notebook.tab(3).configure(state="normal")
-            self.notebook.tab(4).configure(state="normal")
-            self.notebook.tab(5).configure(state="normal")
-            self.autoscore_button.configure(state="normal")
-            self.simulation_button.configure(state="normal")
-            self.threshold_button.configure(state="normal")
-        
-        
-    def reopen_after_sim(self,elapsed):
+                tkMessageBox.showwarning("Error", e)
+
+                self.update_status("lime green", "READY.")
+                self.notebook.tab(0).configure(state="normal")
+                self.notebook.tab(1).configure(state="normal")
+                self.notebook.tab(2).configure(state="normal")
+                self.notebook.tab(3).configure(state="normal")
+                self.notebook.tab(4).configure(state="normal")
+                self.notebook.tab(5).configure(state="normal")
+                self.autoscore_button.configure(state="normal")
+                self.simulation_button.configure(state="normal")
+                self.threshold_button.configure(state="normal")
+
+    def reopen_after_sim(self, elapsed):
         runCommand("close all")
         if Paths.mappath != "":
             runCommand("open "+Paths.mappath)
@@ -2271,166 +2290,160 @@ class PyRyDialog(ModelessDialog):
         minsc = -999999999999.99
         minfname = ""
         for o in outfiles:
-        print o
-        if len(o.split("_")) > 1:
-        sc = float(o.split("_")[1])
-        if sc != 0.0:
-            if sc > minsc:
-            print sc
-            minsc = sc
-            minfname = o
-            
-        runCommand("open "+Paths.ss_outpath+"/"+minfname)#direct_dirname+"_0.0_1_full.pdb.pdb")
+            print o
+            if len(o.split("_")) > 1:
+                sc = float(o.split("_")[1])
+                if sc != 0.0:
+                    if sc > minsc:
+                        print sc
+                        minsc = sc
+                        minfname = o
+
+        runCommand("open "+Paths.ss_outpath+"/"+minfname)
         if Paths.mappath != "":
             str_n = "1"
         else:
             str_n = "0"
         runCommand("split #"+str_n)
-        #runCommand("rainbow model #"+str_n)
-        P1F.writeAllPDBs(Paths.temppath,Paths.mappath)
+
+        P1F.writeAllPDBs(Paths.temppath, Paths.mappath)
         runCommand("close #"+str_n)
         new_structs = os.listdir(Paths.temppath)
         for i in new_structs:
             runCommand("open "+Paths.temppath+"/"+i)
-        self.score_complex(no_out=1,elapsed=elapsed, smode="reopened")
-    
-    def prepare_ranking_from_window(self):
-    
-    outp = Paths.pluginpath+"/ranking_temp_input"
-    outpf = Paths.pluginpath+"/ready"
+        self.score_complex(no_out=1, elapsed=elapsed, smode="reopened")
 
-    if not os.path.exists(outp):
-            os.makedirs(outp)
+    def prepare_ranking_from_window(self):
+
+        outp = Paths.pluginpath+"/ranking_temp_input"
+        outpf = Paths.pluginpath+"/ready"
+
+        if not os.path.exists(outp):
+                os.makedirs(outp)
         else:
             shutil.rmtree(outp)
             os.makedirs(outp)
 
         if not os.path.exists(outpf):
             os.makedirs(outpf)
-        os.makedirs(outpf+"/packs")
+            os.makedirs(outpf+"/packs")
         else:
             shutil.rmtree(outpf)
             os.makedirs(outpf)
-        os.makedirs(outpf+"/packs")
-        
-    self.update_status("blue","PLEASE WAIT. RANKING COMPLEXES...")
-    
-    count = len(chimera.openModels.list()) - 1
-    
-    chimera.runCommand("split")
-    
-    count2 = len(chimera.openModels.list()) - 1
-    
-    cps = count2 / count
-    
-    o = chimera.openModels.list()[1:]
-    
-    for i in xrange(0, len(o), cps):
-        m = o[i:i+cps]
-        
-        for j in m:
-        id_=j.oslIdent()[1:]
-        command="write "+id_+ " "+outp+"/"+id_+".pdb"
-        runCommand(command)
-        
-        name = j.name.split(".")[0]
-        
-        P3F.generate_input_files(outpf,outp,"",Paths.mappath,1,1,0,1,1,nowindow=1,rankmode=1,rankname=name)
-        
-        files = glob.glob(outp+"/*")
-        for f in files:
-        os.remove(f)
-    
-        files = glob.glob(outpf+"/*.pdb")
-        for f in files:
-        os.remove(f)
-            
+            os.makedirs(outpf+"/packs")
+
+        self.update_status("blue", "PLEASE WAIT. RANKING COMPLEXES...")
+
+        count = len(chimera.openModels.list()) - 1
+
+        chimera.runCommand("split")
+
+        count2 = len(chimera.openModels.list()) - 1
+
+        cps = count2 / count
+
+        o = chimera.openModels.list()[1:]
+
+        for i in xrange(0, len(o), cps):
+            m = o[i:i+cps]
+
+            for j in m:
+                id_ = j.oslIdent()[1:]
+                command = "write "+id_ + " "+outp+"/"+id_+".pdb"
+                runCommand(command)
+
+            name = j.name.split(".")[0]
+
+            P3F.generate_input_files(outpf, outp, "", Paths.mappath, 1,1,0,1,1, nowindow=1, rankmode=1, rankname=name)
+
+            files = glob.glob(outp+"/*")
+            for f in files:
+                os.remove(f)
+
+            files = glob.glob(outpf+"/*.pdb")
+            for f in files:
+                os.remove(f)
+
     def make_ranking(self):
-    
-    try:
+        try:
+            if self.p5_cfg_v.get() == 1:
+                cfg_choice = 1
+            if self.p5_simseq_v.get() == 1:
+                seq_choice = 1
+            if self.p5_res_v.get() == 1:
+                res_choice = 1
 
+            self.p5_runranking_button.configure(state="disabled")
 
-        if self.p5_cfg_v.get() == 1:
-        cfg_choice = 1
-        if self.p5_simseq_v.get() == 1:
-        seq_choice = 1
-        if self.p5_res_v.get() == 1:
-        res_choice = 1
-        
-        
-        self.p5_runranking_button.configure(state="disabled")
-        
-        self.update_status("blue","PLEASE WAIT. GENERATING RANKING...")
-          
-        from Cx_Ranking import run_king
-        
-        outpf = Paths.pluginpath+"/ready"
-        outp = Paths.pluginpath+"/ranking_temp_input"
-        
-        if self.rank_fc_v.get() == 0:
-        self.prepare_ranking_from_window()
-        outpfp = outpf+"/packs"
-        
-        if self.p5_cfg_v.get() == 1:
-        P3F.generate_input_files(outpf,outp,"",Paths.mappath,1,0,0,0,0,nowindow=1)
-        rank_cfg = outpf+"/config.txt"
-        else:
-        rank_cfg = self.p5_cfg_entry.get()
+            self.update_status("blue", "PLEASE WAIT. GENERATING RANKING...")
 
-        if self.p5_simseq_v.get() == 1:
-        rank_seq = outpf+"/sequences.fasta"
-        elif self.p5_simseq_v.get() == 2:
-        rank_seq = self.p5_seq_entry.get()
-        elif self.p5_simseq_v.get() == 3:
-        raw_sequence = self.seq_text_li.getvalue()
-        rank_seq=outpf+"/sequences_inp.fasta"
-        sf = open(rank_seq,"w")#rrr
-        sf.write(raw_sequence)
-        sf.close()
+            from Cx_Ranking import run_king  # it hurts
 
-        if self.p5_res_v.get() == 1:
-        rank_res = ""
-        else:
-        rank_res = self.p5_res_entry.get()
+            outpf = Paths.pluginpath+"/ready"
+            outp = Paths.pluginpath+"/ranking_temp_input"
 
+            if self.rank_fc_v.get() == 0:
+                self.prepare_ranking_from_window()
+                outpfp = outpf+"/packs"
 
-        if self.rank_fc_v.get() == 0:
-        rank_input = outpfp
-        rank_map = Paths.mappath
-        #rank_seq = outpf+"/sequences.fasta"
-        else:
-        rank_input = self.p5_input_entry.get()
-        rank_map = self.p5_map_entry.get()
-        rank_seq = self.p5_seq_entry.get()
+            if self.p5_cfg_v.get() == 1:
+                P3F.generate_input_files(outpf,outp,"",Paths.mappath,1,0,0,0,0,nowindow=1)
+                rank_cfg = outpf+"/config.txt"
+            else:
+                rank_cfg = self.p5_cfg_entry.get()
 
-        
-        if_rank_res=True
-        
-        if rank_input == "" or rank_seq == "" or rank_cfg == "":
-        tkMessageBox.showwarning("Error", "Please provide paths for your structures, sequences and a configuration file.")
-        else:
-        if rank_res == "":
-            rank_res = None
-            if_rank_res = tkMessageBox.askyesno("Warning", "You didn't provide restraints file. Continue without spatial restraints?")
-        if if_rank_res == True:
-            run_king(self.p5_sort_menu.getvalue(),rank_input,rank_seq,rank_res,rank_map,rank_cfg,Paths.pluginpath+"/ranking")
-        
-        files = glob.glob(outpf+"/*")
-        for f in files:
-        if os.path.isdir(f):
-            shutil.rmtree(f)
-        else:
-            os.remove(f)
-        
-        
-        self.p5_runranking_button.configure(state="normal")
-        self.update_status("lime green","READY.")
-        
-        self.p5_runranking_button.configure(state="normal")
-    
-    except Exception as e:
-        tkMessageBox.showwarning("Error", e)
-    
+            if self.p5_simseq_v.get() == 1:
+                rank_seq = outpf+"/sequences.fasta"
+            elif self.p5_simseq_v.get() == 2:
+                rank_seq = self.p5_seq_entry.get()
+            elif self.p5_simseq_v.get() == 3:
+                raw_sequence = self.seq_text_li.getvalue()
+                rank_seq = outpf+"/sequences_inp.fasta"
+                sf = open(rank_seq, "w")
+                sf.write(raw_sequence)
+                sf.close()
+
+            if self.p5_res_v.get() == 1:
+                rank_res = ""
+            else:
+                rank_res = self.p5_res_entry.get()
+
+            if self.rank_fc_v.get() == 0:
+                rank_input = outpfp
+                rank_map = Paths.mappath
+                # rank_seq = outpf+"/sequences.fasta"
+            else:
+                rank_input = self.p5_input_entry.get()
+                rank_map = self.p5_map_entry.get()
+                rank_seq = self.p5_seq_entry.get()
+
+            if_rank_res = True
+
+            if rank_input == "" or rank_seq == "" or rank_cfg == "":
+                tkMessageBox.showwarning("Error",
+                                         "Please provide paths for your structures, sequences and a configuration file.")
+            else:
+                if rank_res == "":
+                    rank_res = None
+                    if_rank_res = tkMessageBox.askyesno("Warning", "You didn't provide restraints file. Continue without spatial restraints?")
+                if if_rank_res == True:
+                    run_king(self.p5_sort_menu.getvalue(),rank_input,rank_seq,rank_res,rank_map,rank_cfg,Paths.pluginpath+"/ranking")
+
+            files = glob.glob(outpf+"/*")
+            for f in files:
+                if os.path.isdir(f):
+                    shutil.rmtree(f)
+                else:
+                    os.remove(f)
+
+            self.p5_runranking_button.configure(state="normal")
+            self.update_status("lime green", "READY.")
+
+            self.p5_runranking_button.configure(state="normal")
+
+        except Exception as e:
+            tkMessageBox.showwarning("Error", e)
+
     def ig_check_elements(self,str_v,map_v,seq_v):
         if str_v.get()==1:
             WS.ig_structures=1
@@ -2441,13 +2454,13 @@ class PyRyDialog(ModelessDialog):
         if map_v.get()==0:
             WS.ig_map=0
         if seq_v.get()==1:
-        WS.ig_structures=1
-        str_v.set(1)
+            WS.ig_structures=1
+            str_v.set(1)
             WS.ig_sequences=1
         if seq_v.get()==0:
             WS.ig_sequences=0
 
-    def ig_check_res(self,variable):
+    def ig_check_res(self, variable):
         if variable.get()==1:
             self.ig_res_entry.configure(label_state="normal",entry_state="normal")
             self.ig_res_button.configure(state="normal")

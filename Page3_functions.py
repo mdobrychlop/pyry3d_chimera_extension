@@ -1,5 +1,4 @@
 from PyRy3D_input_generator import InSequences, InStructures
-from Dialogs import Display
 from shutil import copyfile
 import os
 import shutil
@@ -10,11 +9,7 @@ import tkMessageBox
 import webbrowser
 
 
-Display = Display()
-
-
-class Parameters_Window:
-
+class Parameters_Window():
     def display(self):
         self.params_window = Tkinter.Tk()
         self.params_window.title("Simulation / scoring parameters")
@@ -1325,7 +1320,7 @@ class Parameters_Window:
         print >> cfg_file, "START_ORIENTATION True"
 
 
-class P3F:
+class P3F():
     def __init__(self):
         self.pw = Parameters_Window()
         self.init_params_window()
@@ -1346,25 +1341,26 @@ class P3F:
         return outpath
 
     def generate_input_files(
-            self,
-            outpath,
-            inpath,
-            respath,
-            mappath,
-            cfg_v,
-            str_v,
-            res_v,
-            seq_v,
-            map_v,
-            nowindow=0,
-            rankmode=0,
-            rankname=""):
-        # print "IP", inpath
-        # print "OP", outpath
+                            self,
+                            outpath,
+                            inpath,
+                            respath,
+                            mappath,
+                            cfg_v,
+                            str_v,
+                            res_v,
+                            seq_v,
+                            map_v,
+                            nowindow=0,
+                            rankmode=0,
+                            rankname="",
+                            ):
+
         if outpath == "" or outpath is None:
             tkMessageBox.showinfo(
-                "Output directory?",
-                "Please choose an output directory for your files.")
+                            "Output directory?",
+                            "Please choose an output directory for your files."
+                            )
         else:
             check_outdir = 1
             if nowindow == 0:
@@ -1391,7 +1387,8 @@ class P3F:
             if res_v == 1 and errcheck == 0:
                 if respath == "" or respath is None:
                     tkMessageBox.showinfo(
-                        "Restraints file?", "Please choose a restraints file.")
+                        "Restraints file?", "Please choose a restraints file."
+                        )
                     errcheck = 1
                 else:
                     print "Copying restraints file..."
@@ -1413,7 +1410,8 @@ class P3F:
             if errcheck == 0:
                 if nowindow == 0:
                     tkMessageBox.showinfo(
-                        "Success", "Input files generated successfully.")
+                        "Success", "Input files generated successfully."
+                        )
 
     def check_dir(self, dire):
         if not os.path.exists(dire):
@@ -1423,10 +1421,11 @@ class P3F:
                 shutil.rmtree(dire)
                 os.makedirs(dire)
             wte = tkMessageBox.askyesno(
-                "Warning",
-                "All files in\n" +
-                dire +
-                "\nwill be deleted. Continue?")
+                                "Warning",
+                                "All files in\n" +
+                                dire +
+                                "\nwill be deleted. Continue?"
+                                )
             if wte:
                 wtd = tkMessageBox.askyesno("Warning", "Are you sure?")
                 if wtd:
@@ -1435,12 +1434,15 @@ class P3F:
                     return 1
                 else:
                     tkMessageBox.showinfo(
-                        "PyRy3D info", "Choose a different directory \n and try again.")
+                        "PyRy3D info", "Choose a different directory \n\
+                         and try again."
+                         )
                     return 0
             else:
                 tkMessageBox.showinfo(
                     "PyRy3D info",
-                    "Choose a different directory \n and try again.")
+                    "Choose a different directory \n and try again."
+                    )
                 return 0
 
     def init_params_window(self):

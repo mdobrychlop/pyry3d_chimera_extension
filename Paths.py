@@ -1,5 +1,5 @@
 import os
-
+# 
 directory, filename = os.path.split(__file__)
 directory = directory.split("\\")
 directory = "/".join(directory)

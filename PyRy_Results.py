@@ -112,30 +112,39 @@ class Results_Window:
         dcd = Display()
         dcd.please_wait_window("Highlighting collisions...")
         color = self.collided_color[0]
+        command = "select "
         for i in self.col_list:
-            command = "color " + str(color[0] / 255.0) + "," + str(
-                color[1] / 255.0) + "," + str(color[2] / 255.0) + " " + i
-            runCommand(command)
+            command = command + i + " "
+        runCommand(command)
+        runCommand("color " + str(color[0] / 255.0) + "," + str(
+                color[1] / 255.0) + "," + str(color[2] / 255.0) + " sel")
+        runCommand("~select")
         dcd.please_wait.destroy()
 
     def disp_outbox(self):
         dod = Display()
         dod.please_wait_window("Highlighting outbox atoms...")
         color = self.outbox_a_color[0]
+        command = "select "
         for i in self.outbox_atoms:
-            command = "color " + str(color[0] / 255.0) + "," + str(
-                color[1] / 255.0) + "," + str(color[2] / 255.0) + " " + i
-            runCommand(command)
+            command = command + i + " "
+        runCommand(command)
+        runCommand("color " + str(color[0] / 255.0) + "," + str(
+                color[1] / 255.0) + "," + str(color[2] / 255.0) + " sel")
+        runCommand("~select")
         dod.please_wait.destroy()
 
     def disp_outmap(self):
         dod = Display()
         dod.please_wait_window("Highlighting outmap atoms...")
         color = self.outmap_a_color[0]
+        command = "select "
         for i in self.outmap_atoms:
-            command = "color " + str(color[0] / 255.0) + "," + str(
-                color[1] / 255.0) + "," + str(color[2] / 255.0) + " " + i
-            runCommand(command)
+            command = command + i + " "
+        runCommand(command)
+        runCommand("color " + str(color[0] / 255.0) + "," + str(
+                color[1] / 255.0) + "," + str(color[2] / 255.0) + " sel")
+        runCommand("~select")
         dod.please_wait.destroy()
 
     def disp_grid(self, box, rad):
@@ -309,10 +318,13 @@ class Results_Window:
         did.please_wait_window("Highlighting inmap atoms...")
         if self.inmap_v.get() == 0:
             color = self.inmap_a_color[0]
+            command = "select "
             for i in self.inmap_atoms:
-                command = "color " + str(color[0] / 255.0) + "," + str(
-                    color[1] / 255.0) + "," + str(color[2] / 255.0) + " " + i
-                runCommand(command)
+                command = command + i + " "
+            runCommand(command)
+            runCommand("color " + str(color[0] / 255.0) + "," + str(
+                color[1] / 255.0) + "," + str(color[2] / 255.0) + " sel")
+            runCommand("~select")
         if self.inmap_v.get() == 1:
             a = self.cfg_radius
             bildfile = open(Paths.pluginpath + "/inmap_1.bild", "w")

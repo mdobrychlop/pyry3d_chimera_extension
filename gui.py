@@ -38,6 +38,9 @@ from Calculate import calculate_threshold
 from Draw_Plot import Log_Diagram
 from Calculate import run
 
+MODE = "TEST"
+# MODE = "NORMAL"
+
 
 class PyRyDialog(ModelessDialog):
 
@@ -51,6 +54,50 @@ class PyRyDialog(ModelessDialog):
             )
 
     title = "PyRy3D Extension"
+
+    def load_test_data(self):
+        Paths.mappath = "/home/mateusz/1NIC/TUTORIAL/1nic.mrc"
+        self.complist = ["/home/mateusz/1NIC/TUTORIAL/mixed/A.pdb",
+                         "/home/mateusz/1NIC/TUTORIAL/mixed/B.pdb",
+                         "/home/mateusz/1NIC/TUTORIAL/mixed/C.pdb"
+                         ]
+
+        self.openandsaveall()
+    """
+        def openandsaveall(self):
+            if len(self.complist) <= 1:
+                tkMessageBox.showinfo(
+                    "PyRy3D info",
+                    "You must add at least two structures."
+                    )
+            else:
+                rly1 = True
+                if Paths.mappath == "" or Paths.mappath == ():
+                    rly1 = tkMessageBox.askyesno(
+                            "Warning",
+                            "No shape descriptor provided. Continue?"
+                            )
+
+                if rly1 is True:
+                    rly2 = tkMessageBox.askyesno(
+                            "Warning",
+                            "This will close all opened models before loading new data. Continue?"
+                            )
+                    if rly2 is True:
+                        runCommand("close all")
+                        P1F.opencommand(Paths.mappath, self.complist)
+                        P1F.writeAllPDBs(Paths.temppath, Paths.mappath)
+                        runCommand("windowsize 9999 9999")
+                        self.open_button.configure(state="disabled")
+                        self.dens_button.configure(state="disabled")
+                        self.comp_button.configure(state="disabled")
+                        self.clear_button.configure(state="disabled")
+                        self.new_session_button.configure(state="normal")
+                        self.notebook.tab(1).configure(state="normal")
+                        self.notebook.tab(2).configure(state="normal")
+                        self.notebook.tab(3).configure(state="normal")
+                        self.notebook.tab(3).configure(state="normal")
+    """
 
     def save_path(self, newpath):
         print newpath
@@ -83,6 +130,14 @@ class PyRyDialog(ModelessDialog):
                             fg="blue"
                             )
         self.StatusLabel.pack()
+
+        if MODE == "TEST":
+            self.TESTButton = Tkinter.Button(
+                                self.StatusFrame,
+                                text="TEST",
+                                bg="red",
+                                command=self.load_test_data)
+            self.TESTButton.pack()
 
         # ----- CREATING THE NOTEBOOK
 
@@ -1999,146 +2054,146 @@ class PyRyDialog(ModelessDialog):
             if not os.path.exists(Paths.simscoreinputpath):
                 os.makedirs(Paths.simscoreinputpath)
 
-            try:
-                ld = Log_Diagram()
-                P1F.writeAllPDBs(Paths.temppath, Paths.mappath)
+            #try:
+            ld = Log_Diagram()
+            P1F.writeAllPDBs(Paths.temppath, Paths.mappath)
 
-                if self.simseq_v.get() == 1 or smode == "reopened":
-                    print "REOPENED"
-                    sequence_file = Paths.simscoreinputpath+"/sequences.fasta"
-                elif self.simseq_v.get() == 2:
-                    sequence_file = Paths.user_seqpath
-                elif self.simseq_v.get() == 3:
-                    raw_sequence = self.seq_text_li.getvalue()
-                    sequence_file = Paths.ss_outpath+"/sequences_inp.fasta"
-                    sf = open(sequence_file, "w")
-                    sf.write(raw_sequence)
-                    sf.close()
+            if self.simseq_v.get() == 1 or smode == "reopened":
+                print "REOPENED"
+                sequence_file = Paths.simscoreinputpath+"/sequences.fasta"
+            elif self.simseq_v.get() == 2:
+                sequence_file = Paths.user_seqpath
+            elif self.simseq_v.get() == 3:
+                raw_sequence = self.seq_text_li.getvalue()
+                sequence_file = Paths.ss_outpath+"/sequences_inp.fasta"
+                sf = open(sequence_file, "w")
+                sf.write(raw_sequence)
+                sf.close()
 
-                if self.cfg_v.get() == 2:
-                    le_config_file = self.ss_cfg_fil_entry.getvalue()
-                else:
-                    le_config_file = Paths.simscoreinputpath+"/config.txt"
+            if self.cfg_v.get() == 2:
+                le_config_file = self.ss_cfg_fil_entry.getvalue()
+            else:
+                le_config_file = Paths.simscoreinputpath+"/config.txt"
 
-                if Paths.mappath != "":
-                        if Paths.mappath[-3:] == "pdb" or Paths.mappath[-3:] == "PDB":
-                            saxs_file_path = Paths.simscoreinputpath+"/"+Paths.mappath.split("/")[-1]
-                            map_file_path = None
-                        else:
-                            map_file_path = Paths.simscoreinputpath+"/"+Paths.mappath.split("/")[-1]
-                            saxs_file_path = None
-                else:
-                    map_file_path = ""
-                    saxs_file_path = None
+            if Paths.mappath != "":
+                    if Paths.mappath[-3:] == "pdb" or Paths.mappath[-3:] == "PDB":
+                        saxs_file_path = Paths.simscoreinputpath+"/"+Paths.mappath.split("/")[-1]
+                        map_file_path = None
+                    else:
+                        map_file_path = Paths.simscoreinputpath+"/"+Paths.mappath.split("/")[-1]
+                        saxs_file_path = None
+            else:
+                map_file_path = ""
+                saxs_file_path = None
 
-                if Paths.ig_respath is not None:
-                    P3F.generate_input_files(
-                            Paths.simscoreinputpath,
-                            Paths.temppath,
-                            Paths.ig_respath,
-                            Paths.mappath,
-                            1, 1, 1, 1, 1,
-                            nowindow=1
-                            )
-                    restraints_path = Paths.simscoreinputpath+"/restraints.txt"
-                else:
-                    P3F.generate_input_files(
-                            Paths.simscoreinputpath,
-                            Paths.temppath,
-                            Paths.ig_respath,
-                            Paths.mappath,
-                            1, 1, 0, 1, 1,
-                            nowindow=1
-                            )
-                    restraints_path = None
+            if Paths.ig_respath is not None:
+                P3F.generate_input_files(
+                        Paths.simscoreinputpath,
+                        Paths.temppath,
+                        Paths.ig_respath,
+                        Paths.mappath,
+                        1, 1, 1, 1, 1,
+                        nowindow=1
+                        )
+                restraints_path = Paths.simscoreinputpath+"/restraints.txt"
+            else:
+                P3F.generate_input_files(
+                        Paths.simscoreinputpath,
+                        Paths.temppath,
+                        Paths.ig_respath,
+                        Paths.mappath,
+                        1, 1, 0, 1, 1,
+                        nowindow=1
+                        )
+                restraints_path = None
 
-                history_path = "history.txt"
-                fullatom = "full.pdb"
+            history_path = "history.txt"
+            fullatom = "full.pdb"
 
-                if no_out == 0:
-                    opath = Paths.ss_outpath
+            if no_out == 0:
+                opath = Paths.ss_outpath
 
-                if no_out == 1:
-                    if not os.path.exists(Paths.temp_out_path):
-                        os.makedirs(Paths.temp_out_path)
-                        opath = Paths.temp_out_path
+            if no_out == 1:
+                if not os.path.exists(Paths.temp_out_path):
+                    os.makedirs(Paths.temp_out_path)
+                    opath = Paths.temp_out_path
 
-                if map_file_path == "" and restraints_path is None:
-                    tkMessageBox.showinfo(
-                            "PyRy3D info",
-                            "You need either a shape descriptor or some distance restraints."
-                            )
-                else:
-                    resultdir, logfile = run(
-                                            WS.draw_box_grid,
-                                            "evaluate",
-                                            Paths.simscoreinputpath+"/input.tar",
-                                            map_file_path,
-                                            restraints_path,
-                                            sequence_file,
-                                            le_config_file,
-                                            opath,
-                                            history_path=history_path,
-                                            fullatom=fullatom,
-                                            sax_path=saxs_file_path,
-                                            last_elapsed=elapsed
-                                            )
+            if map_file_path == "" and restraints_path is None:
+                tkMessageBox.showinfo(
+                        "PyRy3D info",
+                        "You need either a shape descriptor or some distance restraints."
+                        )
+            else:
+                resultdir, logfile = run(
+                                        WS.draw_box_grid,
+                                        "evaluate",
+                                        Paths.simscoreinputpath+"/input.tar",
+                                        map_file_path,
+                                        restraints_path,
+                                        sequence_file,
+                                        le_config_file,
+                                        opath,
+                                        history_path=history_path,
+                                        fullatom=fullatom,
+                                        sax_path=saxs_file_path,
+                                        last_elapsed=elapsed
+                                        )
 
-                if os.path.exists(Paths.temp_out_path):
-                    shutil.rmtree(Paths.temp_out_path)
+            if os.path.exists(Paths.temp_out_path):
+                shutil.rmtree(Paths.temp_out_path)
 
-                self.update_status("lime green", "READY.")
-                self.notebook.tab(0).configure(state="normal")
-                self.notebook.tab(1).configure(state="normal")
-                self.notebook.tab(2).configure(state="normal")
-                self.notebook.tab(3).configure(state="normal")
-                self.notebook.tab(4).configure(state="normal")
-                self.notebook.tab(5).configure(state="normal")
-                self.autoscore_button.configure(state="normal")
-                self.simulation_button.configure(state="normal")
-                self.threshold_button.configure(state="normal")
+            #     self.update_status("lime green", "READY.")
+            #     self.notebook.tab(0).configure(state="normal")
+            #     self.notebook.tab(1).configure(state="normal")
+            #     self.notebook.tab(2).configure(state="normal")
+            #     self.notebook.tab(3).configure(state="normal")
+            #     self.notebook.tab(4).configure(state="normal")
+            #     self.notebook.tab(5).configure(state="normal")
+            #     self.autoscore_button.configure(state="normal")
+            #     self.simulation_button.configure(state="normal")
+            #     self.threshold_button.configure(state="normal")
 
-            except InputError as e:
-                tkMessageBox.showwarning("Input error", e)
+            # except InputError as e:
+            #     tkMessageBox.showwarning("Input error", e)
 
-                self.update_status("lime green", "READY.")
-                self.notebook.tab(0).configure(state="normal")
-                self.notebook.tab(1).configure(state="normal")
-                self.notebook.tab(2).configure(state="normal")
-                self.notebook.tab(3).configure(state="normal")
-                self.notebook.tab(4).configure(state="normal")
-                self.notebook.tab(5).configure(state="normal")
-                self.autoscore_button.configure(state="normal")
-                self.simulation_button.configure(state="normal")
-                self.threshold_button.configure(state="normal")
+            #     self.update_status("lime green", "READY.")
+            #     self.notebook.tab(0).configure(state="normal")
+            #     self.notebook.tab(1).configure(state="normal")
+            #     self.notebook.tab(2).configure(state="normal")
+            #     self.notebook.tab(3).configure(state="normal")
+            #     self.notebook.tab(4).configure(state="normal")
+            #     self.notebook.tab(5).configure(state="normal")
+            #     self.autoscore_button.configure(state="normal")
+            #     self.simulation_button.configure(state="normal")
+            #     self.threshold_button.configure(state="normal")
 
-            except ConfigError as e:
-                tkMessageBox.showwarning("Config error", e)
+            # except ConfigError as e:
+            #     tkMessageBox.showwarning("Config error", e)
 
-                self.update_status("lime green", "READY.")
-                self.notebook.tab(0).configure(state="normal")
-                self.notebook.tab(1).configure(state="normal")
-                self.notebook.tab(2).configure(state="normal")
-                self.notebook.tab(3).configure(state="normal")
-                self.notebook.tab(4).configure(state="normal")
-                self.notebook.tab(5).configure(state="normal")
-                self.autoscore_button.configure(state="normal")
-                self.simulation_button.configure(state="normal")
-                self.threshold_button.configure(state="normal")
+            #     self.update_status("lime green", "READY.")
+            #     self.notebook.tab(0).configure(state="normal")
+            #     self.notebook.tab(1).configure(state="normal")
+            #     self.notebook.tab(2).configure(state="normal")
+            #     self.notebook.tab(3).configure(state="normal")
+            #     self.notebook.tab(4).configure(state="normal")
+            #     self.notebook.tab(5).configure(state="normal")
+            #     self.autoscore_button.configure(state="normal")
+            #     self.simulation_button.configure(state="normal")
+            #     self.threshold_button.configure(state="normal")
 
-            except Exception as e:
-                tkMessageBox.showwarning("Error", e)
+            # except Exception as e:
+            #     tkMessageBox.showwarning("Error", e)
 
-                self.update_status("lime green","READY.")
-                self.notebook.tab(0).configure(state="normal")
-                self.notebook.tab(1).configure(state="normal")
-                self.notebook.tab(2).configure(state="normal")
-                self.notebook.tab(3).configure(state="normal")
-                self.notebook.tab(4).configure(state="normal")
-                self.notebook.tab(5).configure(state="normal")
-                self.autoscore_button.configure(state="normal")
-                self.simulation_button.configure(state="normal")
-                self.threshold_button.configure(state="normal")
+            #     self.update_status("lime green","READY.")
+            #     self.notebook.tab(0).configure(state="normal")
+            #     self.notebook.tab(1).configure(state="normal")
+            #     self.notebook.tab(2).configure(state="normal")
+            #     self.notebook.tab(3).configure(state="normal")
+            #     self.notebook.tab(4).configure(state="normal")
+            #     self.notebook.tab(5).configure(state="normal")
+            #     self.autoscore_button.configure(state="normal")
+            #     self.simulation_button.configure(state="normal")
+            #     self.threshold_button.configure(state="normal")
 
     def simulate_complex_fin(self):
 
